@@ -1,0 +1,42 @@
+services:
+  backend-ventas:
+    build:
+      context: ./back-Ventas_SpringBoot/Springboot-API-REST
+      dockerfile: Dockerfile
+    image: ep2/backend-ventas:local
+    container_name: ep2_backend_ventas
+    restart: unless-stopped
+    environment:
+      SERVER_PORT: 8080
+      DB_ENDPOINT: 10.0.3.204
+      DB_PORT: 3306
+      DB_NAME: ep2_innovatech
+      DB_USERNAME: ep2_user
+      DB_PASSWORD: ep2_pass
+    ports:
+      - "8080:8080"
+    networks:
+      - ep2_backend_network
+
+  backend-despachos:
+    build:
+      context: ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
+      dockerfile: Dockerfile
+    image: ep2/backend-despachos:local
+    container_name: ep2_backend_despachos
+    restart: unless-stopped
+    environment:
+      SERVER_PORT: 8081
+      DB_ENDPOINT: 10.0.3.204
+      DB_PORT: 3306
+      DB_NAME: ep2_innovatech
+      DB_USERNAME: ep2_user
+      DB_PASSWORD: ep2_pass
+    ports:
+      - "8081:8081"
+    networks:
+      - ep2_backend_network
+
+networks:
+  ep2_backend_network:
+    driver: bridge

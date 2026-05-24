@@ -1,0 +1,56 @@
+name: EP2 Deploy Backend
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  build-and-push-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push backend ventas image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./back-Ventas_SpringBoot/Springboot-API-REST
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ep2-backend-ventas:latest
+
+      - name: Build and push backend despachos image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./back-Despachos_SpringBoot/Springboot-API-REST-DESPACHO
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ep2-backend-despachos:latest
+
+  deploy-backend:
+    needs: build-and-push-backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy backend via frontend bastion
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.EC2_BACKEND_PRIVATE_IP }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          proxy_host: ${{ secrets.EC2_FRONTEND_PUBLIC_IP }}
+          proxy_username: ubuntu
+          proxy_key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /opt/ep2/backend
+            git pull origin deploy || true
+            export DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}
+            docker compose -f docker-compose.backend.prod.yml pull
+            docker compose -f docker-compose.backend.prod.yml up -d
+            docker image prune -f

@@ -1,0 +1,24 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: ep2_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: ep2_innovatech
+      MYSQL_USER: ep2_user
+      MYSQL_PASSWORD: ep2_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    networks:
+      - ep2_db_network
+
+volumes:
+  mysql_data:
+
+networks:
+  ep2_db_network:
+    driver: bridge

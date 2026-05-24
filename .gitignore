@@ -1,0 +1,22 @@
+# IDE / sistema
+.DS_Store
+.idea/
+.vscode/
+*.iml
+
+# secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Java / Maven
+**/target/
+**/.classpath
+**/.project
+**/.settings/
+
+# logs
+*.log
+logs/
