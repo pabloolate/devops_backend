@@ -10,6 +10,7 @@ services:
       DB_NAME: ep2_innovatech
       DB_USERNAME: ep2_user
       DB_PASSWORD: ep2_pass
+      SPRING_DATASOURCE_URL: "jdbc:mysql://10.0.3.204:3306/ep2_innovatech?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
     ports:
       - "8080:8080"
     networks:
@@ -26,6 +27,7 @@ services:
       DB_NAME: ep2_innovatech
       DB_USERNAME: ep2_user
       DB_PASSWORD: ep2_pass
+      SPRING_DATASOURCE_URL: "jdbc:mysql://10.0.3.204:3306/ep2_innovatech?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC"
     ports:
       - "8081:8081"
     networks:
